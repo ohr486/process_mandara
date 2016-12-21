@@ -2,7 +2,8 @@ defmodule ProcessMandara.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", ProcessMandara.RoomChannel
+  channel "track:*", ProcessMandara.TrackChannel
+  channel "nodes", ProcessMandara.NodesChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

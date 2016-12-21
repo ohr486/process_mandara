@@ -1,36 +1,43 @@
-<div class="jumbotron">
-  <h2><%= gettext "Welcome to %{name}", name: "Phoenix!" %></h2>
-  <p class="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
-</div>
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head></head>
+<body>
+  <div id="top_left">
+    <div id="node_selector">
+      <ul></ul>
+      <input type="text" placeholder="newnode@<%= hostname %>"/>
+    </div>
 
-<div class="row marketing">
-  <div class="col-lg-6">
-    <h4>Resources</h4>
-    <ul>
-      <li>
-        <a href="http://phoenixframework.org/docs/overview">Guides</a>
-      </li>
-      <li>
-        <a href="https://hexdocs.pm/phoenix">Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-    </ul>
+    <div id="controls">
+      <button id="stop_msg_tracing">Stop Msg Tracing</button>
+    </div>
+
+    <div id="legend">
+      <svg>
+        <g class="node supervisor">
+          <circle cx="10" cy="20" r="5"></circle>
+          <text x="10" y="20" dx="8" dy="3">Supervisor</text>
+        </g>
+        <g class="node normal">
+          <circle cx="10" cy="40" r="5"></circle>
+          <text x="10" y="40" dx="8" dy="3">PID</text>
+        </g>
+        <g class="node normal msg_traced">
+          <circle cx="10" cy="60" r="5"></circle>
+          <text x="10" y="60" dx="8" dy="3">PID (msg tracing)</text>
+        </g>
+        <g class="node port">
+          <circle cx="10" cy="80" r="5"></circle>
+          <text x="10" y="80" dx="8" dy="3">Port</text>
+        </g>
+      </svg>
+    </div>
   </div>
 
-  <div class="col-lg-6">
-    <h4>Help</h4>
-    <ul>
-      <li>
-        <a href="http://groups.google.com/group/phoenix-talk">Mailing list</a>
-      </li>
-      <li>
-        <a href="http://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">@elixirphoenix</a>
-      </li>
-    </ul>
+  <div class="left">
+      <div id="graph"></div>
+      <div id="log"></div>
   </div>
-</div>
+  <div id="msg_seq"></div>
+</body>
+</html>
