@@ -15,19 +15,16 @@ g.node circle {
   stroke: black;
 }
 g.node.normal circle {
-  fill: steelblue;
-}
-g.node.supervisor circle {
   fill: blue;
 }
+g.node.supervisor circle {
+  fill: red;
+}
 g.node.port circle {
-  fill: lightblue;
+  fill: yellow;
 }
 g.node.dead circle {
   fill: lightgrey;
-}
-g.node.msg_traced circle {
-  stroke: red;
 }
 g.node {
   text.application_label {
@@ -41,7 +38,7 @@ g.node {
 
 #graph {
   width:100%;
-  height:80%;
+  height:100%;
   margin:none;
   padding:none;
 
@@ -53,35 +50,6 @@ g.node {
     stroke: red;
     fill: none;
     opacity: 1
-  }
-}
-
-#log {
-  overflow-y: auto;
-  width: 100%;
-  height: 20%;
-  margin: none;
-  padding: 5px;
-  border-top: 1px solid black;
-
-  .logline {
-    font: 12px sans-serif; 
-
-    &:nth-child(even) {
-      background: lightgrey;
-    }
-
-    img {
-      height: 25px;
-    }
-
-    .pid {
-      font-style: italic;
-    }
-
-    .msg {
-      font-family: monospace;
-    }
   }
 }
 

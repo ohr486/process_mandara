@@ -27,7 +27,6 @@ defmodule ProcessMandara.TrackChannel do
   def handle_in("cleanup", node, socket), do: {:noreply, socket}
 
   def announce_spawn(node, pid_map) do
-    IO.puts "###### announce_spawn! #######"
     Endpoint.broadcast! "track:#{node}", "spawn", pid_map
   end
 

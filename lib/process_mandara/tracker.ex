@@ -8,36 +8,8 @@ defmodule ProcessMandara.Tracker do
   end
 
   def start(node) do
-    IO.puts "##### start #{node} #####"
     Node.spawn_link(node, :gen_server, :start, [{:local, __MODULE__}, __MODULE__, [Node.self], []])
   end
-
-  # --- tracking VM ---
-
-  def init([mandara_node]) do
-    :erlang.trace(:all, true, [:procs])
-    {:ok, mandara_node}
-  end
-
-  def handle_info({:trace, _spawner_pid, :spawn, pid, _mfa}, mandara_node) do
-    IO.puts "---- spawn ----"
-    :rpc.call(mandara_node, TrackChannel, :announce_spawn, [:erlang.node, map_pids_to_info([pid])])
-    {:noreply, mandara_node}
-  end
-
-  def handle_info({:trace, pid, :exit, reason}, mandara_node) do
-    IO.puts "---- exit ----"
-    :rpc.call(mandara_node, TrackChannel, :announce_exit, [:erlang.node, pid_to_bin(pid)])
-    {:noreply, mandara_node}
-  end
-
-
-  def handle_info(msg, state) do
-    IO.puts "---- else ----"
-    {:noreply, state}
-  end
-
-
 
   def init_state(node) do
     :rpc.call(node, __MODULE__, :init_state, [])
@@ -51,6 +23,28 @@ defmodule ProcessMandara.Tracker do
     }
   end
 
+  # --- Tracking ---
+
+  def init([mandara_node]) do
+    :erlang.trace(:all, true, [:procs])
+    {:ok, mandara_node}
+  end
+
+  def handle_info({:trace, _spawner_pid, :spawn, pid, _mfa}, mandara_node) do
+    :rpc.call(mandara_node, TrackChannel, :announce_spawn, [:erlang.node, map_pids_to_info([pid])])
+    {:noreply, mandara_node}
+  end
+
+  def handle_info({:trace, pid, :exit, reason}, mandara_node) do
+    :rpc.call(mandara_node, TrackChannel, :announce_exit, [:erlang.node, pid_to_bin(pid)])
+    {:noreply, mandara_node}
+  end
+
+  def handle_info(msg, state) do
+    {:noreply, state}
+  end
+
+  # --- Process Data ---
 
   def map_pids_to_info(pids) do
     pids
@@ -111,12 +105,11 @@ defmodule ProcessMandara.Tracker do
   def app(port) when is_port(port), do: nil
   def app(_), do: raise "invalid type"
 
-
-
   def ptype(pid) when is_pid(pid) do
     case Process.info(pid, :dictionary) do
       :undefined -> :dead
-      {_, [{_, _}, "$initial_call": {:supervisor, _, _}]} -> :supervisor
+      #{_, [{_, _}, "$initial_call": {:supervisor, _, _}]} -> :supervisor
+      {_, ["$initial_call": {:supervisor, _, _}, "$ancestors": _]} -> :supervisor
       _ -> :normal
     end
   end
@@ -132,7 +125,7 @@ defmodule ProcessMandara.Tracker do
     atom |> :erlang.whereis |> pid_to_bin
   end
 
-
+  # --- Link Data ---
 
   def all_links do
     :lists.flatmap(fn pid ->
@@ -144,7 +137,4 @@ defmodule ProcessMandara.Tracker do
     end, :erlang.processes)
     |> :lists.usort
   end
-
-
-
 end

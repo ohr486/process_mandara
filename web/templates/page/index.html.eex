@@ -15,13 +15,9 @@
       <circle cx="10" cy="40" r="5"></circle>
       <text x="10" y="40" dx="8" dy="3">PID</text>
       </g>
-      <g class="node normal msg_traced">
-      <circle cx="10" cy="60" r="5"></circle>
-      <text x="10" y="60" dx="8" dy="3">PID (msg tracing)</text>
-      </g>
       <g class="node port">
-      <circle cx="10" cy="80" r="5"></circle>
-      <text x="10" y="80" dx="8" dy="3">Port</text>
+      <circle cx="10" cy="60" r="5"></circle>
+      <text x="10" y="60" dx="8" dy="3">Port</text>
       </g>
     </svg>
   </div>

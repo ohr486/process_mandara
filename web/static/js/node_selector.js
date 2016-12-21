@@ -1,5 +1,7 @@
 export default class {
   constructor(container) {
+    console.log("ns-con");
+
     this.container = container;
     this.channel = socket.channel("nodes", {});
 
@@ -8,19 +10,11 @@ export default class {
     };
 
     this.channel.join().receive("ok", updateNodes);
-
     this.channel.on("update", updateNodes);
-
-    let self = this;
-    $(this.container).find("input").keypress(function (event) {
-      if (event.keyCode === 13) { // enter key
-        self.add(this.value.trim());
-        this.value = "";
-      }
-    });
   }
 
   update(nodes) {
+    console.log("ns-update:" + nodes);
     let node_els = d3.select(this.container.find("ul").get(0)).selectAll("li.node_name").data(nodes);
 
     let node = node_els.enter().insert("li")
@@ -31,15 +25,16 @@ export default class {
             $(this).siblings().removeClass("selected");
             app.switchToNode(d);
           });
-
     node_els.exit().remove();
   }
 
   add(node) {
+    console.log("ns-add:" + node);
     this.channel.push("add", node);
   }
 
   cleanup(node) {
+    console.log("ns-cleanup:" + node);
     this.channel.push("cleanup", node);
   }
 }

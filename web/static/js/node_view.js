@@ -1,22 +1,28 @@
 import Graph from "web/static/js/graph";
 
 export default class {
-  constructor(node, graph_container, msg_seq_container, log_container) {
+  constructor(node, graph_container) {
     this.node = node;
     this.channel = socket.channel("track:"+ node, {});
     this.pids = {};
 
-    //graph_container.empty();
-
+    graph_container.empty();
     this.graph = new Graph(graph_container, this, this.pids);
 
-
     this.channel.on("spawn", msg => {
-      console.log("spawn!!!!!!!!!!");
+      console.log("process spawn! :" + msg.pid);
       $.each(msg, (pid, info) => {
         this.addNode(pid, info);
       });
       this.graph.update(true);
+    });
+
+    this.channel.on("exit", msg => {
+      console.log("process exit! :" + msg.pid);
+      if (this.pids[msg.pid]) {
+        this.removeNode(msg.pid);
+        this.graph.update(true);
+      }
     });
 
     this.channel.join().receive("ok", msg => {
@@ -36,6 +42,12 @@ export default class {
       type: info.type,
       msg_traced: info.msg_traced};
     this.pids[id] = pid;
+  }
+
+  removeNode(id) {
+    if(!this.pids[id]) return;
+    this.graph.removeNode(this.pids[id]);
+    delete this.pids[id];
   }
 
   cleanup() {
